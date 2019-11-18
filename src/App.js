@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     (async function send() {
       const ts = Date.now() / 1000;
-      const verify = sha256(`10001|${ts}|"paste private key here"|`);
+      const verify = sha256(`10001|${ts}|"gdm00vtvqhw4"|`);
 
       const data = {
         clientID: 10001,
