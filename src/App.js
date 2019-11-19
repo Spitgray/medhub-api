@@ -10,7 +10,9 @@ function App() {
   useEffect(() => {
     (async function send() {
       const ts = Date.now() / 1000;
-      const verify = sha256(`10001|${ts}|"paste private key here"|`);
+      const verify = sha256(
+        `10001|${ts}|${process.env.REACT_APP_PRIVATE_KEY}|`
+      );
 
       const data = {
         clientID: 10001,
@@ -20,10 +22,7 @@ function App() {
       };
 
       try {
-        let response = await axios.post(
-          "https://cors-anywhere.herokuapp.com/https://harbor.medhub.com/functions/api/info/test",
-          data
-        );
+        let response = await axios.post("/api", data);
         setResponse(response);
       } catch (e) {
         alert(e);
