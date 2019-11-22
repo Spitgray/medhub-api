@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import axios from "axios";
 
@@ -8,36 +8,55 @@ const sha256 = require("js-sha256").sha256;
 
 function App() {
   const [apiData, setApiData] = useState(null);
+  const [dates, setDates] = useState({});
 
-  useEffect(() => {
-    (async function send() {
-      const ts = Date.now() / 1000;
-      const request =
-        '{"programID":19,"startDate":"2016-07-01","endDate":"2016-12-31"}';
-      const verify = sha256(
-        `10001|${ts}|${process.env.REACT_APP_PRIVATE_KEY}|${request}`
-      );
+  const setStartDate = e => {
+    setDates({ ...dates, start: e.target.value });
+  };
 
-      const data = {
-        clientID: 10001,
-        ts,
-        type: "json",
-        request,
-        verify
-      };
+  const setEndDate = e => {
+    setDates({ ...dates, end: e.target.value });
+  };
 
-      try {
-        let res = await axios.post("/api", data);
-        console.log(res);
-        setApiData(res.data);
-      } catch (e) {
-        alert(e);
-      }
-    })();
-  }, []);
+  async function searchData() {
+    const ts = Date.now() / 1000;
+    const request = `{"programID":19,"startDate":"${dates.start}","endDate":"${dates.end}"}`;
+    const verify = sha256(
+      `10001|${ts}|${process.env.REACT_APP_PRIVATE_KEY}|${request}`
+    );
+
+    const data = {
+      clientID: 10001,
+      ts,
+      type: "json",
+      request,
+      verify
+    };
+
+    try {
+      let res = await axios.post("/api", data);
+      console.log(res);
+      setApiData(res.data);
+    } catch (e) {
+      alert(e);
+    }
+  }
 
   return (
-    <div>
+    <div style={{ marginTop: "20px" }}>
+      <div style={{ margin: "auto", textAlign: "center" }}>
+        <div>
+          <label>Start Date</label>
+          <input type="date" onChange={setStartDate} />
+        </div>
+        <div>
+          <label>End Date</label>
+          <input type="date" onChange={setEndDate} />
+        </div>
+        <button onClick={searchData}>SEARCH</button>
+      </div>
+      <br />
+
       {apiData && (
         <table style={{ width: "70%", textAlign: "center" }}>
           <thead>
