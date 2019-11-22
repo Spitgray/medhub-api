@@ -1,16 +1,15 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const axios = require("axios");
+const axios = require("./axios");
 
 app.use(express.json());
 
 app.post("/api", async (req, res) => {
   try {
-    let response = await axios.post(
-      "https://harbor.medhub.com/functions/api/info/test",
-      { ...req.body }
-    );
+    let response = await axios.post("/schedules/shiftsSchedule", {
+      ...req.body
+    });
 
     res.status(201).json(response.data);
   } catch (e) {
