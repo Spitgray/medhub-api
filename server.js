@@ -7,11 +7,14 @@ app.use(express.json());
 
 app.post("/api", async (req, res) => {
   try {
-    let response = await axios.post("/schedules/shiftsSchedule", {
+    let response = await axios.post("/schedules/shifts", {
+      ...req.body
+    });
+    let response2 = await axios.post("/schedules/shiftsSchedule", {
       ...req.body
     });
 
-    res.status(201).json(response.data);
+    res.status(201).json(response.data || response2.data);
   } catch (e) {
     console.log(e);
     res.status(400).json(e);
